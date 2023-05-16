@@ -26,6 +26,7 @@ public abstract class Player {
 
     public double getAttack() {
         return attack;
+
     }
 
     public void setAttack(double attack) {
@@ -44,5 +45,14 @@ public abstract class Player {
         if(health < 20 || health >30)
             throw new IllegalArgumentException("Health value must be between 20 and 130");
         this.health = health;
+    }
+
+    public abstract void useSuperPower();
+
+    public void decreaseHealth(double value){
+        health -= value;
+    }
+    public void increaseAttack(double value){
+        attack += value;
     }
 }
