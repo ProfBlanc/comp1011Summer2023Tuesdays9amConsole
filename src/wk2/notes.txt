@@ -1,0 +1,49 @@
+Fighting Game
+    Players that have
+        name
+        attack
+        health
+    A game one player, attacks other player
+    Other player's health decreases by attackers attack value
+
+E.G.
+    Player 1
+        Batman
+        health  = 20
+        attack = 5
+    Player 2
+        Superman
+        health = 21
+        attack = 6
+
+Interfaces
+    list of requirements
+    Game
+        start
+        resume
+        end
+        rules
+        save
+        load
+
+
+Create a String literal that stores a message of
+the rules of the game
+    One Player attacks another player
+    Other player's health decreases by
+    attackers attack value
+
+In the rules() method, return the string literal
+
+In start(): create a friendly welcome message
+In end(): create a friendly goodbye message
+In resume(): create a friendly resume message
+
+
+
+Create an abstract class called Player
+    name: private
+    attack: private
+    health: private
+    getters and setters for these private attributes
+    abstract method called useSuperPower

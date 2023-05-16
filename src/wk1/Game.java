@@ -1,3 +1,5 @@
+package wk1;
+
 public class Game {
 
     public Player player1, player2;
