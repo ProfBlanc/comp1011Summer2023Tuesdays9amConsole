@@ -41,10 +41,10 @@ public class FightingGame implements Game{
                 try {
                     String playerName = input.nextLine();
 
-                    System.out.println("Enter Attack of Player " + (validPlayers + 1));
+                    System.out.println("Enter Attack of Player " + playerName);
                     double playerAttack = input.nextDouble();
 
-                    System.out.println("Enter Health of Player " + (validPlayers + 1));
+                    System.out.println("Enter Health of Player " + playerName);
                     double playerHealth = input.nextDouble();
                     input.nextLine();
 
@@ -118,6 +118,8 @@ public class FightingGame implements Game{
         players.get(victim).decreaseHealth(players.get(attacker).getAttack());
         System.out.printf("%s health is now %.1f%n",
                 players.get(victim).getName(), players.get(victim).getHealth());
+
+        System.out.println("*".repeat(20));
 
 
     }

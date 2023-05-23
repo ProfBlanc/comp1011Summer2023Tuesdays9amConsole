@@ -5,7 +5,7 @@ public class Main {
 
         Game game = new Game();
 
-        game.player1 = new Player("Batman", 5d, 20d);
+        game.player1 = new Player("batman.txt", 5d, 20d);
         game.player2 = new Player("Superman", 6d, 21);
         /*
         game.turn(game.player1, game.player2);// one player attacks another player
