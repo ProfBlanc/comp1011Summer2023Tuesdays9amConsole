@@ -1,11 +1,16 @@
 package wk2;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class FightingGame implements Game{
 
+    private Path basePath = Path.of(".", "src", "game_data", "players");
     private Scanner input = new Scanner(System.in);
     private ArrayList<Player> players = new ArrayList<>();
 
@@ -28,7 +33,30 @@ public class FightingGame implements Game{
         sb.append(input.nextLine());
 
         if(sb.toString().toLowerCase().charAt(0) == 'l'){
-            System.out.println("Not yet implemented");
+            //System.out.println("Not yet implemented");
+
+            if(load("batman") && load("superman")){
+
+                //read contents
+                List<String> data1 = loadFileDataArray(basePath.resolve("batman.txt"));
+                List<String> data2 = loadFileDataArray(basePath.resolve("superman.txt"));
+
+                //instantiate file contents to Player object
+
+                Player player1 = new NormalPlayer(data1.get(0).trim(),
+                        Double.parseDouble(data1.get(1)),
+                        Double.parseDouble(data1.get(2))
+                                );
+
+                Player player2 = new NormalPlayer(data2.get(0).trim(),
+                        Double.parseDouble(data2.get(1)),
+                                Double.parseDouble(data2.get(2))
+                                );
+
+                //add Players to array list of players
+                players.add(player1);
+                players.add(player2);
+            }
         }
         else if(sb.toString().toLowerCase().charAt(0) == 's'){
 
@@ -64,6 +92,16 @@ public class FightingGame implements Game{
 
     }
 
+    private List<String> loadFileDataArray(Path filename){
+
+        try {
+
+            return Files.readAllLines(filename);
+        }
+        catch (IOException e){
+            return new ArrayList<>();
+        }
+    }
     @Override
     public void stop(){
         System.out.println("Type 'S' to stop the fight");
@@ -103,9 +141,14 @@ public class FightingGame implements Game{
         return false;
     }
 
+    /**
+     * Determines if a specific file exists
+     * @param filename
+     * @return
+     */
     @Override
     public boolean load(String filename) {
-        return false;
+        return basePath.resolve(filename + ".txt").toFile().exists();
     }
 
     private void turn(int attacker){
