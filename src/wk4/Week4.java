@@ -1,7 +1,9 @@
 package wk4;
 import com.google.gson.*;
 
-
+import java.nio.file.Files;
+import java.nio.file.Path;
+import wk2.*;
 
 public class Week4 {
 
@@ -32,6 +34,11 @@ public class Week4 {
 
         NormalPlayer player1 = gson.fromJson(toJsonText, NormalPlayer.class);
         System.out.println(player1);
+
+        NormalPlayer player2 = new NormalPlayer("Test", 8, 25);
+        String text = gson.toJson(player2);
+        System.out.println(text);
+
 
 
     }

@@ -1,6 +1,10 @@
 package wk2;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -10,11 +14,17 @@ import java.util.Scanner;
 
 public class FightingGame implements Game{
 
-    private Path basePath = Path.of(".", "src", "game_data", "players");
+    private Path basePathPlayers = Path.of(".", "src", "game_data", "players");
+    private Path basePathGames = Path.of(".", "src", "game_data", "games");
     private Scanner input = new Scanner(System.in);
     private ArrayList<Player> players = new ArrayList<>();
 
     private StringBuilder sb = new StringBuilder();
+
+    private Gson gson = new Gson();
+    private GsonBuilder gsonBuilder = new GsonBuilder();
+
+    private boolean forceGameOver = false;
 
     public FightingGame(){
 
@@ -33,30 +43,50 @@ public class FightingGame implements Game{
         sb.append(input.nextLine());
 
         if(sb.toString().toLowerCase().charAt(0) == 'l'){
-            //System.out.println("Not yet implemented");
 
-            if(load("batman") && load("superman")){
 
-                //read contents
-                List<String> data1 = loadFileDataArray(basePath.resolve("batman.txt"));
-                List<String> data2 = loadFileDataArray(basePath.resolve("superman.txt"));
+            try{
+                String filename = "Game_Batman_vs_Superman.txt";
+                List<String>data = loadFileDataArray(basePathGames.resolve(filename));
 
-                //instantiate file contents to Player object
 
-                Player player1 = new NormalPlayer(data1.get(0).trim(),
-                        Double.parseDouble(data1.get(1)),
-                        Double.parseDouble(data1.get(2))
-                                );
+                Player player1 = gson.fromJson(data.get(0), NormalPlayer.class);
+                Player player2 = gson.fromJson(data.get(1), NormalPlayer.class);
 
-                Player player2 = new NormalPlayer(data2.get(0).trim(),
-                        Double.parseDouble(data2.get(1)),
-                                Double.parseDouble(data2.get(2))
-                                );
+                System.out.println(player1);
+                System.out.println(player2);
 
-                //add Players to array list of players
                 players.add(player1);
                 players.add(player2);
             }
+            catch (Exception e){
+                System.err.println(e);
+            }
+
+            //System.out.println("Not yet implemented");
+
+//            if(load("batman") && load("superman")){
+//
+//                //read contents
+//                List<String> data1 = loadFileDataArray(basePathPlayers.resolve("batman.txt"));
+//                List<String> data2 = loadFileDataArray(basePathPlayers.resolve("superman.txt"));
+//
+//                //instantiate file contents to Player object
+//
+//                Player player1 = new NormalPlayer(data1.get(0).trim(),
+//                        Double.parseDouble(data1.get(1)),
+//                        Double.parseDouble(data1.get(2))
+//                                );
+//
+//                Player player2 = new NormalPlayer(data2.get(0).trim(),
+//                        Double.parseDouble(data2.get(1)),
+//                                Double.parseDouble(data2.get(2))
+//                                );
+//
+//                //add Players to array list of players
+//                players.add(player1);
+//                players.add(player2);
+//            }
         }
         else if(sb.toString().toLowerCase().charAt(0) == 's'){
 
@@ -137,8 +167,22 @@ public class FightingGame implements Game{
     }
 
     @Override
-    public boolean save(String filename) {
-        return false;
+    public boolean save(String filename, String content) {
+
+
+        try{
+            byte[] contentBytes = content.getBytes(StandardCharsets.UTF_8);
+
+            Files.write(basePathGames.resolve(filename), contentBytes);
+
+            return true;
+
+        }
+        catch (Exception e){
+
+            return false;
+        }
+
     }
 
     /**
@@ -148,7 +192,7 @@ public class FightingGame implements Game{
      */
     @Override
     public boolean load(String filename) {
-        return basePath.resolve(filename + ".txt").toFile().exists();
+        return basePathPlayers.resolve(filename + ".txt").toFile().exists();
     }
 
     private void turn(int attacker){
@@ -162,17 +206,47 @@ public class FightingGame implements Game{
         System.out.printf("%s health is now %.1f%n",
                 players.get(victim).getName(), players.get(victim).getHealth());
 
+        seperator();
+        askForAction();
+        seperator();
+    }
+    private void seperator(){
         System.out.println("*".repeat(20));
 
+    }
+    private void askForAction(){
+
+        System.out.println("Do you want to save the game?");
+        String answer = input.nextLine();
+        if(answer.toLowerCase().charAt(0) == 'y'){
+
+            String filename = String.format("Game_%s_vs_%s.txt", players.get(0).getName(), players.get(1).getName());
+
+            String value1 = gson.toJson(players.get(0));
+            String value2 = gson.toJson(players.get(1));
+
+            String content = String.format("%s%n%s", value1, value2);
+
+            if(save(filename, content)){
+                //end game
+                //players.get(0).decreaseHealth(10000); //end the game
+                forceGameOver = true;
+            }
+            else{
+                System.err.println("unable to save the game");
+            }
+
+        }
 
     }
     public boolean isGameOver(){
+
 
         for(Player current : players){
             if(current.getHealth() <= 0)
                 return true;
         }
-        return false;
+        return forceGameOver;
     }
     public void fight(){
 

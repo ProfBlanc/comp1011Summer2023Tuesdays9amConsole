@@ -1,5 +1,6 @@
 package wk2;
 
+
 import java.util.Scanner;
 
 public class NormalPlayer extends Player{
@@ -12,11 +13,14 @@ public class NormalPlayer extends Player{
     }
 
     private boolean hasUsedSuperPower;
-    private Scanner input = new Scanner(System.in);
+
     @Override
     public void useSuperPower() {
         //either increase attack by 1
         // or increase health by 3
+
+        Scanner input = new Scanner(System.in);
+
         if(!hasUsedSuperPower){
             hasUsedSuperPower = true;
 

@@ -7,6 +7,6 @@ public interface Game {
     void stop();
     void end();
     String rules();
-    boolean save(String filename);
+    boolean save(String filename, String content);
     boolean load(String filename);
 }
