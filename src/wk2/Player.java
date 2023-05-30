@@ -55,4 +55,13 @@ public abstract class Player {
     public void increaseAttack(double value){
         attack += value;
     }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "name='" + name + '\'' +
+                ", attack=" + attack +
+                ", health=" + health +
+                '}';
+    }
 }
